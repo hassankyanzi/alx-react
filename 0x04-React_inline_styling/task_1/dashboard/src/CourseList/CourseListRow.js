@@ -1,55 +1,55 @@
-import PropTypes from 'prop-types';
-import React, { Fragment }from 'react';
+import React from 'react'
+import propTypes from 'prop-types'
 
-function CourseListRow({ isHeader, textFirstCell, textSecondCell }) {
-	const styleRow = { backgroundColor: '#f5f5f5ab' };
-	const styleHeaderRow = { backgroundColor: '#deb5b545' };
 
-	let myElement;
-	if (isHeader === true) {
-		if (textSecondCell === null) {
-			myElement = <th colSpan="2">{textFirstCell}</th>;
+const CourseListRow = ({ isHeader, textFirstCell, textSecondCell }) => {
+	// props:
+	// - isHeader: bool, default: false
+	// - textFirstCell: string, required
+	// - textSecondCell: string, default: null
+	const row_background_color = { backgroundColor: '#f5f5f5ab' };
+	const header_row_background_color = { backgroundColor: '#deb5b545' };
+	let node;
+	let style;
+	
+	if (isHeader) {
+		style = header_row_background_color;
+		if (!textSecondCell) {
+			node = <th colSpan="2">{textFirstCell}</th>;
 		} else {
-			myElement = (
-				<Fragment>
-					<th>{textFirstCell}</th>
-					<th>{textSecondCell}</th>
-				</Fragment>
-			);
+			node = 
+		  <React.Fragment>
+			  <th>{textFirstCell}</th>
+			  <th>{textSecondCell}</th>
+		  </React.Fragment>;
 		}
 	} else {
-		myElement = (
-			<Fragment>
-				<td>{textFirstCell}</td>
-				<td>{textSecondCell}</td>
-			</Fragment>
-		);
-	}
-
-	let stylesBackground;
-
-	if (isHeader) {
-		stylesBackground = styleHeaderRow;
-	} else {
-		stylesBackground = styleRow;
+		style = row_background_color;
+		node = 
+		  <React.Fragment>
+			  <td>{textFirstCell}</td>
+			  <td>{textSecondCell}</td>
+		  </React.Fragment>;
 	}
 	return (
-		<tr style={stylesBackground}>{myElement}</tr>
+		<tr style={style}>
+			{node}
+		</tr>
 	);
 }
-
-CourseListRow.propTypes = {
-	isHeader: PropTypes.bool,
-	textFirstCell: PropTypes.string.isRequired,
-	textSecondCell: PropTypes.oneOfType([
-		PropTypes.string,
-		PropTypes.number
-	])
-};
 
 CourseListRow.defaultProps = {
 	isHeader: false,
 	textSecondCell: null
-};
+}
 
-export default CourseListRow;
+CourseListRow.propTypes = {
+	isHeader: propTypes.bool,
+	textFirstCell: propTypes.string.isRequired,
+	textSecondCell: propTypes.oneOfType([
+		propTypes.string,
+		propTypes.number,
+	])
+}
+
+export default CourseListRow

@@ -1,38 +1,24 @@
-import React from 'react';
-import { shallow } from 'enzyme';
+import { shallow, mount } from '../../config/setupTests';
 import { StyleSheetTestUtils } from 'aphrodite';
+import React from 'react';
+import BodySection from './BodySection';
 import BodySectionWithMarginBottom from './BodySectionWithMarginBottom';
 
-beforeEach(() => {
-  StyleSheetTestUtils.suppressStyleInjection();
-});
 
-afterEach(() => {
-  StyleSheetTestUtils.clearBufferAndResumeStyleInjection();
-});
-
-describe('Basic React Tests - <BodySectionWithMarginBottom />', function() {
-	it('Should render without crashing', () => {
-		const wrapper = shallow(<BodySectionWithMarginBottom />);
-		expect(wrapper.exists()).toBeTruthy();
+describe('BodySectionWithMarginBottom', () => {
+	beforeEach(() => {
+		StyleSheetTestUtils.suppressStyleInjection();
 	});
 
-	it('Should render correctly a BodySection component and that the props are passed correctly to the child component', () => {
-		const wrapper = shallow(
-			<BodySectionWithMarginBottom title='title' >
-				<p>children</p>
-			</BodySectionWithMarginBottom>
-		);
-		expect(wrapper.find("BodySection")).toHaveLength(1);
-    expect(wrapper.find("BodySection").props().title).toEqual('title');
-	});
+	it(`Checks that component correctly renders a <BodySection /> component`, () => {
+		const wrapper = shallow(<BodySectionWithMarginBottom title="test"/>);
+		expect(wrapper.find(BodySection).exists()).toBe(true);
+	})
 
-	// it("Should check that the CSS is correctly applied to BodySectionWithMarginBottom", () => {
-  //   const wrapper = shallow(
-  //     <BodySectionWithMarginBottom title="title">
-  //       <p>children</p>
-  //     </BodySectionWithMarginBottom>
-  //   );
-  //   expect(wrapper.find(".bodySectionWithMargin").first().exists()).toEqual(true);
-  // });
-});
+	it(`Checks that props are passed correctly to child component`, () => {
+		const wrapper = shallow(<BodySectionWithMarginBottom title="test title"><p>test children</p></BodySectionWithMarginBottom>)
+		expect(wrapper.find(BodySection).props().title).toBe('test title');
+		// p tag is child component in this instance
+		expect(wrapper.find('p').text()).toBe('test children');
+	})
+})
