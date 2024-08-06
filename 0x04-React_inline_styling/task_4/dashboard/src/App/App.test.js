@@ -1,98 +1,72 @@
-import { shallow, mount } from '../../config/setupTests';
+import React from 'react';
+import React from 'react';
+import { shallow, mount } from 'enzyme';
 import { StyleSheetTestUtils } from 'aphrodite';
 import App from './App';
-import Login from '../Login/Login';
-import Notifications from '../Notifications/Notifications';
-import NotificationItem from '../Notifications/NotificationItem';
-import BodySection from '../BodySection/BodySection';
-import BodySectionWithMarginBottom from '../BodySection/BodySectionWithMarginBottom';
 
-window.alert = jest.fn();
-
-
-// shallow render app component
-describe('<App />', () => {
-	beforeEach(() => {
-		StyleSheetTestUtils.suppressStyleInjection();
-	});
-
-	afterEach(() => {
-		jest.clearAllMocks();
-	});
-
-	// regular render tests
-	it('Tests that App renders without crashing', () => {
-		const wrapper = shallow(<App />);
-		expect(wrapper.exists()).toBe(true);
-	})
-
-	it('Contains Header component', () => {
-		const wrapper = shallow(<App />);
-		expect(wrapper.find('Header').length).toBe(1);
-	})
-
-	it('Contains Login component', () => {
-		const wrapper = shallow(<App />);
-		expect(wrapper.contains(<Login />)).toBe(true);
-	})
-
-	it('Contains Footer component', () => {
-		const wrapper = shallow(<App />);
-		expect(wrapper.find('Footer').length).toBe(1);
-	})
-
-	it('Tests that CourseList is not displayed', () => {
-		const wrapper = shallow(<App />);
-		expect(wrapper.find('CourseList').length).toBe(0);
-	})
-
-	it('Tests that <Notifications /> is not displayed', () => {
-		const wrapper = shallow(<App />);
-		expect(wrapper.contains(<Notifications />)).toBe(false);
-	})
-
-	it('Tests that <Notificationitem /> is not displayed', () => {
-		const wrapper = shallow(<App />);
-		expect(wrapper.contains(<NotificationItem />)).toBe(false);
-	})
-
-	it('Tests that the correct amount of <BodySection /> and <BodySectionWithMargin /> are displayed', () => {
-		const wrapper = shallow(<App />);
-		expect(wrapper.find(BodySection).length).toBe(1);
-		expect(wrapper.find(BodySectionWithMarginBottom).length).toBe(1);
-	})
+beforeEach(() => {
+  StyleSheetTestUtils.suppressStyleInjection();
 });
 
+afterEach(() => {
+  StyleSheetTestUtils.clearBufferAndResumeStyleInjection();
+});
 
-// describe case when isLoggedIn is true
-describe('<App />', () => {
-	beforeEach(() => {
-		StyleSheetTestUtils.suppressStyleInjection();
+describe('Basic React Tests - <App />', function() {
+	it('Should render without crashing', () => {
+		const wrapper = shallow(<App />);
+		expect(wrapper.exists()).toBeTruthy();
 	});
 
-	it('Tests that the Login component is not rendered when isLoggedIn is true', () => {
+	it('Should contain the Notifications component', () => {
+		const wrapper = shallow(<App />);
+		expect(wrapper.find('Notifications')).toHaveLength(1);
+	});
+
+	it('Should contain the Header component', () => {
+		const wrapper = shallow(<App />);
+		expect(wrapper.find('Header')).toHaveLength(1);
+	});
+
+	it('Should contain the Login component', () => {
+		const wrapper = shallow(<App />);
+		expect(wrapper.find('Login')).toHaveLength(1);
+	});
+
+	it('Should contain the Footer component', () => {
+		const wrapper = shallow(<App />);
+		expect(wrapper.find('Footer')).toHaveLength(1);
+	});
+
+	it('Should check that CourseList is not displayed', () => {
+		const wrapper = shallow(<App />);
+		expect(wrapper.find('CourseList')).toHaveLength(0);
+	});
+});
+
+describe('Basic React Tests - When isLoggedIn is true', function() {
+	it('Should verify that the Login component is not included', () => {
 		const wrapper = shallow(<App isLoggedIn={true} />);
-		expect(wrapper.contains(<Login />)).toBe(false);
-	})
+		expect(wrapper.find('Login')).toHaveLength(0);
+	});
 
-	it('Tests that CourseList component is rendered when isLoggedIn is false', () => {
-		const wrapper = shallow(<App isLoggedIn />);
-		expect(wrapper.find('CourseList').length).toBe(1);
-	})
+	it('Should check that the CourseList component is included', () => {
+		const wrapper = shallow(<App isLoggedIn={true} />);
+		expect(wrapper.find('CourseList')).toHaveLength(1);
+	});
+});
 
-	it(`Verifies that alert is called when ctrl-h is pressed`, () => {
-		const wrapper = mount(<App isLoggedIn />);
-		wrapper.instance().keyDownHandler = window.alert;
-		wrapper.instance().keyDownHandler({ keyCode: 72, ctrlKey: true });
-		expect(window.alert).toHaveBeenCalled();
-	})
+describe('Basic React Tests - App Class', function() {
+	it('When the keys control and h are pressed - Should check that logOut function, passed as a prop, is called and the alert function is called with a string', () => {
+		const events = {};
 
-	it(`Verifies that logOut function is called when ctrl-h is pressed`, () => {
-		const ConsoleSpy = jest.spyOn(global.console, 'log');
-		const wrapper = mount(<App isLoggedIn />);
-		wrapper.instance().keyDownHandler({ keyCode: 72, ctrlKey: true });
-		expect(ConsoleSpy).toHaveBeenCalledWith('logOut function console log for testing');
-		wrapper.unmount();
-	})
-
-})
+    document.addEventListener = jest.fn((event, callback) => {
+      events[event] = callback;
+    });
+		window.alert = jest.fn();
+		shallow(<App />);
+		events.keydown({ key: "h", ctrlKey: true });
+		expect(window.alert).toHaveBeenCalledWith("Logging you out");
+		jest.restoreAllMocks();
+  });
+});

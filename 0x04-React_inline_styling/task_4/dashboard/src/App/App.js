@@ -1,112 +1,116 @@
-import React, { Component } from 'react'
-import Notifications from '../Notifications/Notifications'
-import { getLatestNotification } from '../utils/utils'
-import { StyleSheet, css } from 'aphrodite'
-import Login from '../Login/Login'
-import Header from '../Header/Header'
-import Footer from '../Footer/Footer'
-import CourseList from '../CourseList/CourseList'
-import BodySection from '../BodySection/BodySection'
-import BodySectionWithMarginBottom from '../BodySection/BodySectionWithMarginBottom'
-import propTypes from 'prop-types'
+import React from 'react';
+import PropTypes from 'prop-types';
+import { StyleSheet, css } from 'aphrodite';
+import Header from '../Header/Header';
+import Login from '../Login/Login';
+import BodySection from '../BodySection/BodySection';
+import BodySectionWithMarginBottom from '../BodySection/BodySectionWithMarginBottom';
+import Footer from '../Footer/Footer';
+import CourseList from '../CourseList/CourseList';
+import Notifications from '../Notifications/Notifications';
+import { getLatestNotification } from '../utils/utils';
 
+const listCourses = [
+  {id: 1, name: 'ES6', credit: 60},
+  {id: 2, name: 'Webpack', credit: 20},
+  {id: 3, name: 'React', credit: 40}
+];
 
-// implement class components
-class App extends Component {
-	// if App component is mounted, check if user is holding down 'control'
-	// and 'h' keys simultaneously, and if so, alert and call logOut function.
+const listNotifications = [
+  {id: 1, type: 'default', value: 'New course available'},
+  {id: 2, type: 'urgent', value: 'New resume available'},
+  {id: 3, type: 'urgent', html: { __html: getLatestNotification() }}
+];
 
-	// class function to check if component is mounted
-	componentDidMount() {
-		window.addEventListener('keydown', this.keyDownHandler);
-		this.keyDownHandler
-	}
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.keyboardKeys = this.keyboardKeys.bind(this);
+  }
 
-	// class function to check if component is unmounted
-	componentWillUnmount() {
-		window.removeEventListener('keydown', this.keyDownHandler);
-	}
+  keyboardKeys(x) {
+    if (x.key === 'h' && x.ctrlKey) {
+      alert('Logging you out');
+      this.props.logOut();
+    }
+  }
 
-	// class function to check if ctrl-h is pressed
-	keyDownHandler = (e) => {
-		if (e.keyCode === 72 && e.ctrlKey) {
-			alert('Logging you out');
-			this.props.logOut();
-		}
-	}
+  componentDidMount() {
+    document.addEventListener('keydown', this.keyboardKeys);
+  }
 
-	render() {
-		// assign props to local variables
-		const { isLoggedIn } = this.props;
+  componentWillUnmount() {
+    document.addEventListener('keydown', this.keyboardKeys);
+  }
 
-		const listCourses = [
-			{ id: 1, name: 'ES6', credit: '60' },
-			{ id: 2, name: 'Webpack', credit: '20' },
-			{ id: 3, name: 'React', credit: '40' }
-		]
-		
-		const listNotifications = [
-			{ id: 1, type: "default", value: "New course available" },
-			{ id: 2, type: "urgent", value: "New resume available" },
-			{ id: 3, html: { __html: getLatestNotification() }, type: "urgent" }
-		]
-	
-		return (
-			<div className={css(bodyStyles.App)}>
-				<Notifications listNotifications={listNotifications} />
-				<Header />
-				<div className="App-body">
-					{isLoggedIn
-						? 
-						<BodySectionWithMarginBottom title="Course list">
-							<CourseList listCourses={listCourses} />
-						</BodySectionWithMarginBottom>
-						: 
-						<BodySectionWithMarginBottom title="Login in to continue">
-							<Login />
-						</BodySectionWithMarginBottom>
-					}
-					<BodySection title="News from the School"><p>Boring random text</p></BodySection>
-				</div>
-				<div className={css(footerStyles.Footer)}>
-					<Footer />
-				</div>
-			</div>
-		)
-	}
+  render() {
+    const { isLoggedIn, logOut } = this.props;
+    return (
+      <React.Fragment>
+        <Notifications listNotifications={listNotifications}/>
+        <div className={css(styles.App)}>
+          <Header />
+        </div>
+        <div className={css(styles.AppBody)}>
+          {
+            isLoggedIn ? (
+              <BodySectionWithMarginBottom title="Course list">
+                <CourseList listCourses={listCourses}/>
+              </BodySectionWithMarginBottom>
+            ) : (
+              <BodySectionWithMarginBottom title="Log in to continue">
+                <Login />
+              </BodySectionWithMarginBottom>
+            )
+          }
+        </div>
+        <BodySection title="News from the School">
+          <p>
+            Somebody that you loved.
+          </p>
+        </BodySection>
+        <div className={css(styles.AppFooter)}>
+          <Footer />
+        </div>
+      </React.Fragment>
+    );
+  }
 }
 
-const primaryColor = '#E11D3F';
+const styles = StyleSheet.create({
+  App: {
+    fontFamily: 'Arial, Helvetica, sans-serif',
+    margin: 0,
+    padding: 0
+  },
 
-const bodyStyles = StyleSheet.create({
-	App: {
-		backgroundColor: '#ffffff',
-		display: 'flex',
-		flexDirection: 'column',
-	}
+  AppBody: {
+    fontFamily: 'Arial, Helvetica, sans-serif',
+    margin: 0,
+    padding: 0,
+    height: '60vh'
+  },
+
+  AppFooter: {
+    fontFamily: 'Arial, Helvetica, sans-serif',
+    margin: 0,
+    padding: 0,
+    height: '6vh',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderTop: '4px solid #e1354b'
+  },
 });
-
-const footerStyles = StyleSheet.create({
-	Footer: {
-		display: 'flex',
-		flexDirection: 'row',
-		justifyContent: 'center',
-		alignItems: 'center',
-		borderTop: `3px solid ${primaryColor}`,
-		padding: '1rem',
-		fontStyle: 'italic',
-	}
-});
-
-
-App.defaultProps = {
-	isLoggedIn: false,
-	logOut: () => {console.log('logOut function console log for testing')}
-}
 
 App.propTypes = {
-	isLoggedIn: propTypes.bool,
-	logOut: propTypes.func,
-}
+  isLoggedIn: PropTypes.bool,
+  logOut: PropTypes.func
+};
 
-export default App
+App.defaultProps = {
+  isLoggedIn: false,
+  logOut: () => {}
+};
+
+export default App;

@@ -1,51 +1,56 @@
-import React from 'react'
+import React, { Fragment } from 'react';
+import PropTypes from 'prop-types';
 import { StyleSheet, css } from 'aphrodite';
-import CourseListRow from './CourseListRow'
-import CourseShape from './CourseShape'
-import propTypes from 'prop-types'
+import CourseListRow from './CourseListRow';
+import CourseShape from './CourseShape';
+import './CourseList.css';
 
-
-const CourseList = ({ listCourses }) => {
+function CourseList({ listCourses }) {
 	return (
-		<table id="CourseList" className={css(courseStyles.table)}>
+		<table id='CourseList' className={css(styles.CourseList)}>
 			<thead>
-				<CourseListRow isHeader={true} textFirstCell="Available Courses" />
-				<CourseListRow isHeader={true} textFirstCell="Course name" textSecondCell="Credit" />
+				<CourseListRow textFirstCell="Available courses" isHeader={true} />
+				<CourseListRow textFirstCell="Course name" textSecondCell="Credit" isHeader={true} />
 			</thead>
-			<tbody id="CourseBody">
-				{/* check if listCourses is empty */}
-				{listCourses.length === 0 && (
-					<tr>
-						<td>No course available yet</td>
-					</tr>
-				)}
-				{/* render listCourses */}
-				{listCourses.map(course => (
-					<CourseListRow key={course.id} textFirstCell={course.name} textSecondCell={course.credit} />
-				))}
+			<tbody>
+				{
+					listCourses.length === 0 && (
+						<CourseListRow
+							textFirstCell="No course available yet"
+							isHeader={false}
+						/>
+					)
+				}
+				{
+					listCourses && listCourses.map((newCourse) => (
+						<CourseListRow 
+							key={newCourse.id}
+							textFirstCell={newCourse.name}
+							textSecondCell={newCourse.credit}
+							isHeader={false}
+						/>
+					))
+				}
 			</tbody>
 		</table>
-	)
+	);
 }
 
-const courseStyles = StyleSheet.create({
-	table: {
-		display: 'table',
-		border: '1px solid',
-		borderCollapse: 'collapse',
-		margin: '2rem auto 0 auto',
+const styles = StyleSheet.create({
+	CourseList: {
 		width: '90%',
+		margin: '50px auto',
+		border: '1px solid lightgray',
+		borderCollapse: 'collapse'
 	}
 });
 
+CourseList.propTypes = {
+	listCourses: PropTypes.arrayOf(CourseShape)
+};
 
 CourseList.defaultProps = {
 	listCourses: []
-}
+};
 
-CourseList.propTypes = {
-	listCourses: propTypes.array
-}
-
-
-export default CourseList
+export default CourseList;

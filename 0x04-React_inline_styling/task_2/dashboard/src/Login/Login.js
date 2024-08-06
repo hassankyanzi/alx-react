@@ -1,65 +1,43 @@
-import React, { Component } from 'react'
-import { StyleSheet, css } from 'aphrodite'
-import WithLoggingHOC from '../HOC/WithLogging'
+import  React from 'react';
+import { StyleSheet, css } from 'aphrodite';
 
-class Login extends Component {
-	render() {
-		return (
-			<React.Fragment>
-				<div className="App">
-					<main className={css(loginStyles.appBody)}>
-						<p>Login to access the full dashboard</p>
-						<div className={css(loginStyles.inputs)}>
-							<label className={css(loginStyles.label)} htmlFor="email" onClick={() => {
-								// select corresponding input
-								document.getElementById('password').focus();
-							}}>Email</label>
-							<input type="email" id="email" className={css(loginStyles.input)} />
-							<label className={css(loginStyles.label)} htmlFor="password" onClick={() => {
-								// select corresponding input
-								document.getElementById('password').focus();
-							}}>Password</label>
-							<input type="password" id="password" className={css(loginStyles.input)} />
-							<button className={css(loginStyles.button)}>OK</button>
-						</div>
-					</main>
+function Login() {
+  return (
+    <React.Fragment>
+      <div className={css(styles.Login)}>
+				<p>Login to access to the full dashboard</p>
+				<div>
+					<label htmlFor="email" >Email:</label>
+					<input id="email" type="email" className={css(styles.LoginInput)} />
+					<label htmlFor="password" >Password:</label>
+					<input id="password" type="password" className={css(styles.LoginInput)} />
+					<button>OK</button>
 				</div>
-			</React.Fragment>
-		)
-	}
+      </div>
+    </React.Fragment>
+  );
 }
 
-const primaryColor = '#E11D3F';
-
-const loginStyles = StyleSheet.create({
-	appBody: {
-		display: 'flex',
-		flexDirection: 'column',
-		marginBottom: '3rem',
-		paddingTop: '1rem',
-		minHeight: '50vh',
+const styles = StyleSheet.create({
+	Login: {
+		fontFamily: 'Arial, Helvetica, sans-serif',
+		padding: '50px',
+		marginLeft: '-15px'
 	},
 
-	inputs: {
-		display: 'flex',
-		flexDirection: 'row',
+	Loginp: {
+		top: '3rem',
+		left: '2.5rem'
 	},
 
-	input: {
-		height: '15px',
-		marginLeft: '0.2rem',
-		marginTop: '0.5rem',
+	Logindiv: {
+		marginLeft: '-5px',
+		marginTop: '15px'
 	},
 
-	label: {
-		marginTop: '0.5rem',
+	LoginInput: {
+		margin: '5px'
 	},
+});
 
-	button: {
-		height: '21px',
-		marginTop: '0.6rem',
-	}
-})
-
-
-export default WithLoggingHOC(Login)
+export default Login;

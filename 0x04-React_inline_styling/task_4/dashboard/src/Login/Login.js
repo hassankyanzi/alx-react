@@ -1,70 +1,71 @@
-import React, { Component } from 'react'
-import { StyleSheet, css } from 'aphrodite'
-import WithLoggingHOC from '../HOC/WithLogging'
+import  React from 'react';
+import { StyleSheet, css } from "aphrodite";
 
-class Login extends Component {
-	render() {
-		return (
-			<React.Fragment>
-				<div className="App">
-					<main className={css(loginStyles.appBody)}>
-						<p>Login to access the full dashboard</p>
-						<div className={css(loginStyles.inputs)}>
-							<label className={css(loginStyles.label)} htmlFor="email" onClick={() => {
-								// select corresponding input
-								document.getElementById('password').focus();
-							}}>Email</label>
-							<input type="email" id="email" className={css(loginStyles.input)} />
-							<label className={css(loginStyles.label)} htmlFor="password" onClick={() => {
-								// select corresponding input
-								document.getElementById('password').focus();
-							}}>Password</label>
-							<input type="password" id="password" className={css(loginStyles.input)} />
-							<button className={css(loginStyles.button)}>OK</button>
-						</div>
-					</main>
+function Login() {
+  return (
+    <React.Fragment>
+      <div className={css(styles.Login)}>
+				<p>Login to access to the full dashboard</p>
+				<div>
+					<div className={css(styles.inputGroup)}> 
+						<label htmlFor="email" >Email:</label>
+						<input id="email" type="email" className={css(styles.LoginInput)} />
+					</div>
+					<div className={css(styles.inputGroup)}>
+						<label htmlFor="password" >Password:</label>
+						<input id="password" type="password" className={css(styles.LoginInput)} />
+					</div>
+					<button className={css(styles.loginButton)}>OK</button>
 				</div>
-			</React.Fragment>
-		)
-	}
+      </div>
+    </React.Fragment>
+  );
 }
 
-const loginStyles = StyleSheet.create({
-	appBody: {
-		display: 'flex',
-		flexDirection: 'column',
-		marginBottom: '3rem',
-		height: '100%',
-	},
+const responsive = {
+	small: '@media screen and (max-width: 900px)'
+};
 
-	inputs: {
-		'@media (min-width: 350px)': {
-			display: 'flex',
-			flexDirection: 'column',
-			maxWidth: '200px'
-		},
-		'@media (min-width: 900px)': {
-			display: 'flex',
-			flexDirection: 'row',
+const styles = StyleSheet.create({
+	Login: {
+		fontFamily: 'Arial, Helvetica, sans-serif',
+		padding: '50px',
+		[responsive.small]: {
+			padding: 0
 		}
 	},
 
-	input: {
-		height: '15px',
-		marginLeft: '0.2rem',
-		marginTop: '0.5rem',
+	Loginp: {
+		top: '3rem',
+		left: '2.5rem'
 	},
 
-	label: {
-		marginTop: '0.5rem',
+	Logindiv: {
+		marginLeft: '-5px',
+		marginTop: '15px'
 	},
 
-	button: {
-		height: '21px',
-		marginTop: '0.6rem',
-		maxWidth: '40px',
+	LoginInput: {
+		margin: '5px',
+		[responsive.small]: {
+			border: 'none'
+		}
+	},
+
+	inputGroup: {
+		display: 'inline',
+		[responsive.small]: {
+			display: 'flex'
+		}
+	},
+
+	loginButton: {
+		[responsive.small]: {
+			border: '3px solid orange',
+			borderRadius: '5px',
+			
+		}
 	}
-})
+});
 
-
-export default WithLoggingHOC(Login)
+export default Login;
