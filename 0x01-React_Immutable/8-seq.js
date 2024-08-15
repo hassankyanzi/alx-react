@@ -1,30 +1,25 @@
-import Immutable from 'immutable';
+import { Seq } from 'immutable';
 
-function printBestStudents(students) {
-  // filters students by their score > 70
-  // and prints to the console the student with
-  // the first letter in their 'firstName' and 'lastName' properties in uppercase.
-  //
-  // students - Object containing students
-  //
-  // returns nothing
-  const mySeq = Immutable.Seq(students);
-  console.log(mySeq);
+export default function printBestStudents(object) {
+  const seq = Seq(object);
 
-  const filtered = mySeq.filter((student) => student.score > 70);
+  //   console.log(seq);
+  const filtered = seq.filter((student) => {
+    student.firstName.charAt(0).toUpperCase();
+    return student.score > 70;
+  });
 
-  const capFirstLetter = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+  function capFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
 
   const JSObject = filtered.toJS();
 
   Object.keys(JSObject).map((key) => {
-    const student = JSObject[key];
-    student.firstName = capFirstLetter(student.firstName);
-    student.lastName = capFirstLetter(student.lastName);
-    return student;
+    JSObject[key].firstName = capFirstLetter(JSObject[key].firstName);
+    JSObject[key].lastName = capFirstLetter(JSObject[key].lastName);
+    return JSObject[key];
   });
 
   console.log(JSObject);
 }
-
-export default printBestStudents;
